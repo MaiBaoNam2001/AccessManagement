@@ -3,23 +3,230 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
-<table>
-    <tr>
-        <th>Id</th>
-        <th>Name</th>
-        <th>Age</th>
-        <th>Gender</th>
-        <th>Address</th>
-    </tr>
-    <tr th:each="student : ${students}">
-        <td th:text="${student.id}"></td>
-        <td th:text="${student.name}"></td>
-        <td th:text="${student.age}"></td>
-        <td th:text="${student.gender}"></td>
-        <td th:text="${student.address}"></td>
-    </tr>
-</table>
+
+<div class="row">
+    <div class="col-3"></div>
+    <div class="col-6">
+        <form>
+            <div class="mb-3">
+                <label for="id" class="form-label">Id</label>
+                <input disabled type="text" class="form-control" id="id">
+            </div>
+            <div class="mb-3">
+                <label for="name" class="form-label">Họ và Tên</label>
+                <input type="text" class="form-control" id="name">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Giới tính</label>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="gender" value="male">
+                    <label class="form-check-label">Nam</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="gender" value="female">
+                    <label class="form-check-label">Nữ</label>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Địa chỉ</label>
+                <input type="text" class="form-control" id="address">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Tuổi</label>
+                <select class="form-select mb-3" aria-label="Default select example" id="age">
+
+                </select>
+            </div>
+
+
+        </form>
+        <button onclick="addStudent()" class="btn btn-primary">Submit</button>
+        <button onclick="updateStudent()" class="btn btn-primary">Update</button>
+        <table class="table" id="bodyTable">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Address</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+
+    <div class="col-3"></div>
+</div>
+<script>
+    let url = 'http://localhost:8080/api'
+    let rowIndex;
+    for (let i = 1; i < 100; i++)
+        $('#age').append('<option>' + i + '</option>')
+
+
+    function addStudent() {
+        let id = $('#id').val();
+        let name = $('#name').val();
+        let address = $('#address').val();
+        let age = $('#age').val();
+        let gender = $('input:radio[name=gender]').val();
+        let student = {
+            id: id,
+            name: name,
+            address: address,
+            age: age,
+            gender: gender
+        }
+        $.ajax({
+                method: 'POST',
+                url: url + '/students',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(student),
+                success: function (response) {
+                    let newStudent = response;
+                    clearForm();
+                    let totalRow = $('#bodyTable > tbody > tr').length + 1;
+                    $('#bodyTable > tbody:last-child').append('<tr id="row' + totalRow + '">' +
+                        '<td>' + newStudent.id + '</td>' +
+                        '<td>' + newStudent.name + '</td>' +
+                        '<td>' + newStudent.age + '</td>' +
+                        '<td>' + newStudent.gender + '</td>' +
+                        '<td>' + newStudent.address + '</td>' +
+                        '<td><button onclick="editStudent(' + newStudent.id + ', ' + totalRow + ')" >Edit</button> ' +
+                        '<button onclick="deleteStudent(' + newStudent.id + ',' + totalRow + ')">Delete</button> ' +
+                        '</td>' +
+                        '</tr>')
+
+
+
+                },
+                error: function () {
+                    console.log('error');
+                }
+                ,
+            }
+        )
+    }
+
+    function clearForm() {
+        $('#id').val('');
+        $('#name').val('');
+        $('#address').val('');
+        $('#age').val(1);
+        $('#gender').val('');
+    }
+
+    function updateStudent() {
+        let id = $('#id').val();
+        let name = $('#name').val();
+        let address = $('#address').val();
+        let age = $('#age').val();
+        let gender = $('input:radio[name=gender]').val();
+        let student = {
+            id: id,
+            name: name,
+            address: address,
+            age: age,
+            gender: gender
+        }
+        $.ajax({
+            method: 'PUT',
+            url: url + '/students',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(student),
+            success: function (response) {
+                clearForm();
+                $('#bodyTable > tbody').empty();
+                loadStudents();
+            },
+            error: function () {
+                console.log('error');
+            },
+        })
+
+    }
+
+    function deleteStudent(idStudent, index) {
+        $.ajax({
+            method: 'DELETE',
+            url: url + '/students/' + idStudent,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                $('#row' + index).remove();
+            },
+            error: function () {
+                console.log('error');
+            },
+        })
+    }
+
+    function editStudent(idStudent, index) {
+        rowIndex = index;
+        $.ajax({
+            method: 'GET',
+            url: url + '/students/' + idStudent,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                let student = response;
+                $('#id').val(student.id)
+                $('#name').val(student.name)
+                $('input:radio[name=gender]').filter('[value=' + student.gender.toLowerCase() + ']').attr('checked', true);
+                $('#address').val(student.address)
+                $('#age').val(student.age).change();
+            },
+            error: function () {
+                console.log('error');
+            },
+        })
+    }
+
+    function loadStudents() {
+        $.ajax({
+            method: 'GET',
+            url: url + '/students',
+            data: {},
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                let listStudent = response;
+                listStudent.forEach((element, index) => {
+                    $('#bodyTable > tbody:last-child').append('<tr id="row' + index + '">' +
+                        '<td>' + element.id + '</td>' +
+                        '<td>' + element.name + '</td>' +
+                        '<td>' + element.age + '</td>' +
+                        '<td>' + element.gender + '</td>' +
+                        '<td>' + element.address + '</td>' +
+                        '<td><button onclick="editStudent(' + element.id + ', ' + index + ')" >Edit</button> ' +
+                        '<button onclick="deleteStudent(' + element.id + ',' + index + ')">Delete</button> ' +
+                        '</td>' +
+                        '</tr>')
+                })
+
+            },
+            error: function () {
+                console.log('error');
+            },
+        })
+    }
+
+    loadStudents();
+
+
+</script>
+
 </body>
 </html>
