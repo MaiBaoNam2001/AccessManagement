@@ -1,4 +1,4 @@
-package com.mbn.accessmanagement;
+package com.citynow.accessmanagement;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
