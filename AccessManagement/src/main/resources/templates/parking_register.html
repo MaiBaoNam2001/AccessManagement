@@ -3,7 +3,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Access Parking Area</title>
+  <title>Parking Register</title>
   <link rel="stylesheet" th:href="@{/css/style.css}">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -20,7 +20,7 @@
     <div class="table-title">
       <div class="row">
         <div class="col-sm-6">
-          <h2><b>Access Parking Area</b></h2>
+          <h2><b>Parking Register</b></h2>
         </div>
         <div class="col-sm-6"></div>
       </div>
@@ -34,13 +34,13 @@
       <div class="col-sm-6">
         <div class="form-group">
           <label>Project</label>
-          <select class="form-control" id="project"></select>
+          <input type="text" class="form-control" id="project" disabled>
         </div>
       </div>
       <div class="col-sm-6">
         <div class="form-group">
           <label>Building</label>
-          <select class="form-control" id="building"></select>
+          <input type="text" class="form-control" id="building" disabled>
         </div>
       </div>
     </div>
@@ -49,13 +49,58 @@
       <div class="col-sm-6">
         <div class="form-group">
           <label>Parking Area</label>
-          <select class="form-control" id="parkingArea" disabled></select>
+          <input type="text" class="form-control" id="parkingArea" disabled>
         </div>
       </div>
       <div class="col-sm-6">
         <div class="form-group">
           <label>Identity Card</label>
-          <input type="text" class="form-control" id="identityCard">
+          <input type="text" class="form-control" id="identityCard" disabled>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label>License Plate</label>
+          <input type="text" class="form-control" id="licensePlate">
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label>Brand Name</label>
+          <input type="text" class="form-control" id="brandName">
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label>Color</label>
+          <input type="text" class="form-control" id="color">
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label>Vehicle Type</label>
+          <input type="text" class="form-control" id="vehicleType">
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label>Register Date</label>
+          <input type="date" class="form-control" id="registerDate">
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label>Parking Type</label>
+          <select class="form-control" id="parkingType"></select>
         </div>
       </div>
     </div>
@@ -70,5 +115,5 @@
   </div>
 </div>
 </body>
-<script th:src="@{/js/access_parking_area.js}"></script>
+<script th:src="@{/js/parking_register.js}"></script>
 </html>
