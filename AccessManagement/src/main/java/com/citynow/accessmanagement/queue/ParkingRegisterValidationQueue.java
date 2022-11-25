@@ -13,41 +13,33 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ParkingRegisterValidationQueue {
 
-  @Value("${spring.rabbitmq.parking-register-validation.exchange}")
-  private String parkingRegisterValidationExchange;
-  @Value("${spring.rabbitmq.parking-register-validation.dead-letter-exchange}")
-  private String parkingRegisterValidationDeadLetterExchange;
-  @Value("${spring.rabbitmq.parking-register-validation.queue}")
-  private String parkingRegisterValidationQueue;
-  @Value("${spring.rabbitmq.parking-register-validation.dead-letter-queue}")
-  private String parkingRegisterValidationDeadLetterQueue;
-  @Value("${spring.rabbitmq.parking-register-validation.routing-key}")
-  private String parkingRegisterValidationRoutingKey;
-  @Value("${spring.rabbitmq.parking-register-validation.dead-letter-routing-key}")
-  private String parkingRegisterValidationDeadLetterRoutingKey;
-  @Value("${spring.rabbitmq.parking-register-validation.x-dead-letter-exchange}")
-  private String parkingRegisterValidationXDeadLetterExchange;
-  @Value("${spring.rabbitmq.parking-register-validation.x-dead-letter-routing-key}")
-  private String parkingRegisterValidationXDeadLetterRoutingKey;
+  private static final String PARKING_REGISTER_VALIDATION_EXCHANGE = "parking-register-validation.exchange";
+  private static final String PARKING_REGISTER_VALIDATION_DEAD_LETTER_EXCHANGE = "parking-register-validation.dead-letter-exchange";
+  private static final String PARKING_REGISTER_VALIDATION_QUEUE = "parking-register-validation.queue";
+  private static final String PARKING_REGISTER_VALIDATION_DEAD_LETTER_QUEUE = "parking-register-validation.dead-letter-queue";
+  private static final String PARKING_REGISTER_VALIDATION_ROUTING_KEY = "parking-register-validation.routing-key";
+  private static final String PARKING_REGISTER_VALIDATION_DEAD_LETTER_ROUTING_KEY = "parking-register-validation.dead-letter-routing-key";
+  private static final String PARKING_REGISTER_VALIDATION_X_DEAD_LETTER_EXCHANGE = "parking-register-validation.x-dead-letter-exchange";
+  private static final String PARKING_REGISTER_VALIDATION_X_DEAD_LETTER_ROUTING_KEY = "parking-register-validation.x-dead-letter-routing-key";
 
   @Bean
   public Declarables parkingRegisterValidationDlqDeclarables() {
-    return new Declarables(new DirectExchange(parkingRegisterValidationDeadLetterExchange),
-        QueueBuilder.durable(parkingRegisterValidationDeadLetterQueue).lazy().build(),
-        new Binding(parkingRegisterValidationDeadLetterQueue, DestinationType.QUEUE,
-            parkingRegisterValidationDeadLetterExchange,
-            parkingRegisterValidationDeadLetterRoutingKey, null));
+    return new Declarables(new DirectExchange(PARKING_REGISTER_VALIDATION_DEAD_LETTER_EXCHANGE),
+        QueueBuilder.durable(PARKING_REGISTER_VALIDATION_DEAD_LETTER_QUEUE).lazy().build(),
+        new Binding(PARKING_REGISTER_VALIDATION_DEAD_LETTER_QUEUE, DestinationType.QUEUE,
+            PARKING_REGISTER_VALIDATION_DEAD_LETTER_EXCHANGE,
+            PARKING_REGISTER_VALIDATION_DEAD_LETTER_ROUTING_KEY, null));
   }
 
   @Bean
   public Declarables parkingRegisterValidationDeclarables() {
-    return new Declarables(new TopicExchange(parkingRegisterValidationExchange),
-        QueueBuilder.durable(parkingRegisterValidationQueue).lazy()
-            .withArgument(parkingRegisterValidationXDeadLetterExchange,
-                parkingRegisterValidationDeadLetterExchange)
-            .withArgument(parkingRegisterValidationXDeadLetterRoutingKey,
-                parkingRegisterValidationDeadLetterRoutingKey).build(),
-        new Binding(parkingRegisterValidationQueue, DestinationType.QUEUE,
-            parkingRegisterValidationExchange, parkingRegisterValidationRoutingKey, null));
+    return new Declarables(new TopicExchange(PARKING_REGISTER_VALIDATION_EXCHANGE),
+        QueueBuilder.durable(PARKING_REGISTER_VALIDATION_QUEUE).lazy()
+            .withArgument(PARKING_REGISTER_VALIDATION_X_DEAD_LETTER_EXCHANGE,
+                PARKING_REGISTER_VALIDATION_DEAD_LETTER_EXCHANGE)
+            .withArgument(PARKING_REGISTER_VALIDATION_X_DEAD_LETTER_ROUTING_KEY,
+                PARKING_REGISTER_VALIDATION_DEAD_LETTER_ROUTING_KEY).build(),
+        new Binding(PARKING_REGISTER_VALIDATION_QUEUE, DestinationType.QUEUE,
+            PARKING_REGISTER_VALIDATION_EXCHANGE, PARKING_REGISTER_VALIDATION_ROUTING_KEY, null));
   }
 }

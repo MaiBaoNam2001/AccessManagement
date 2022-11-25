@@ -11,15 +11,13 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ParkingRegisterValidationPublisher {
 
-  @Value("${spring.rabbitmq.parking-register-validation.exchange}")
-  private String parkingRegisterValidationExchange;
-  @Value("${spring.rabbitmq.parking-register-validation.routing-key}")
-  private String parkingRegisterValidationRoutingKey;
+  private static final String PARKING_REGISTER_VALIDATION_EXCHANGE = "parking-register-validation.exchange";
+  private static final String PARKING_REGISTER_VALIDATION_ROUTING_KEY = "parking-register-validation.routing-key";
   private final RabbitTemplate rabbitTemplate;
 
   public ParkingRegisterValidation.Output sendRequest(ParkingRegisterValidation.Input request) {
-    return rabbitTemplate.convertSendAndReceiveAsType(parkingRegisterValidationExchange,
-        parkingRegisterValidationRoutingKey, request,
+    return rabbitTemplate.convertSendAndReceiveAsType(PARKING_REGISTER_VALIDATION_EXCHANGE,
+        PARKING_REGISTER_VALIDATION_ROUTING_KEY, request,
         ParameterizedTypeReference.forType(ParkingRegisterValidation.Output.class));
   }
 }

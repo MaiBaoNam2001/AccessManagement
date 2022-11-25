@@ -11,15 +11,13 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class IdentityCardValidationPublisher {
 
-  @Value("${spring.rabbitmq.identity-card-validation.exchange}")
-  private String identityCardValidationExchange;
-  @Value("${spring.rabbitmq.identity-card-validation.routing-key}")
-  private String identityCardValidationRoutingKey;
+  private static final String IDENTITY_CARD_VALIDATION_EXCHANGE = "identity-card-validation.exchange";
+  private static final String IDENTITY_CARD_VALIDATION_ROUTING_KEY = "identity-card-validation.routing-key";
   private final RabbitTemplate rabbitTemplate;
 
   public IdentityCardValidation.Output sendRequest(IdentityCardValidation.Input request) {
-    return rabbitTemplate.convertSendAndReceiveAsType(identityCardValidationExchange,
-        identityCardValidationRoutingKey, request,
+    return rabbitTemplate.convertSendAndReceiveAsType(IDENTITY_CARD_VALIDATION_EXCHANGE,
+        IDENTITY_CARD_VALIDATION_ROUTING_KEY, request,
         ParameterizedTypeReference.forType(IdentityCardValidation.Output.class));
   }
 }

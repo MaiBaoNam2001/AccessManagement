@@ -13,41 +13,33 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class IdentityCardValidationQueue {
 
-  @Value("${spring.rabbitmq.identity-card-validation.exchange}")
-  private String identityCardValidationExchange;
-  @Value("${spring.rabbitmq.identity-card-validation.dead-letter-exchange}")
-  private String identityCardValidationDeadLetterExchange;
-  @Value("${spring.rabbitmq.identity-card-validation.queue}")
-  private String identityCardValidationQueue;
-  @Value("${spring.rabbitmq.identity-card-validation.dead-letter-queue}")
-  private String identityCardValidationDeadLetterQueue;
-  @Value("${spring.rabbitmq.identity-card-validation.routing-key}")
-  private String identityCardValidationRoutingKey;
-  @Value("${spring.rabbitmq.identity-card-validation.dead-letter-routing-key}")
-  private String identityCardValidationDeadLetterRoutingKey;
-  @Value("${spring.rabbitmq.identity-card-validation.x-dead-letter-exchange}")
-  private String identityCardValidationXDeadLetterExchange;
-  @Value("${spring.rabbitmq.identity-card-validation.x-dead-letter-routing-key}")
-  private String identityCardValidationXDeadLetterRoutingKey;
+  private static final String IDENTITY_CARD_VALIDATION_EXCHANGE = "identity-card-validation.exchange";
+  private static final String IDENTITY_CARD_VALIDATION_DEAD_LETTER_EXCHANGE = "identity-card-validation.dead-letter-exchange";
+  private static final String IDENTITY_CARD_VALIDATION_QUEUE = "identity-card-validation.queue";
+  private static final String IDENTITY_CARD_VALIDATION_DEAD_LETTER_QUEUE = "identity-card-validation.dead-letter-queue";
+  private static final String IDENTITY_CARD_VALIDATION_ROUTING_KEY = "identity-card-validation.routing-key";
+  private static final String IDENTITY_CARD_VALIDATION_DEAD_LETTER_ROUTING_KEY = "identity-card-validation.dead-letter-routing-key";
+  private static final String IDENTITY_CARD_VALIDATION_X_DEAD_LETTER_EXCHANGE = "identity-card-validation.x-dead-letter-exchange";
+  private static final String IDENTITY_CARD_VALIDATION_X_DEAD_LETTER_ROUTING_KEY = "identity-card-validation.x-dead-letter-routing-key";
 
   @Bean
   public Declarables identityCardValidationDlqDeclarables() {
-    return new Declarables(new DirectExchange(identityCardValidationDeadLetterExchange),
-        QueueBuilder.durable(identityCardValidationDeadLetterQueue).lazy().build(),
-        new Binding(identityCardValidationDeadLetterQueue, DestinationType.QUEUE,
-            identityCardValidationDeadLetterExchange, identityCardValidationDeadLetterRoutingKey,
-            null));
+    return new Declarables(new DirectExchange(IDENTITY_CARD_VALIDATION_DEAD_LETTER_EXCHANGE),
+        QueueBuilder.durable(IDENTITY_CARD_VALIDATION_DEAD_LETTER_QUEUE).lazy().build(),
+        new Binding(IDENTITY_CARD_VALIDATION_DEAD_LETTER_QUEUE, DestinationType.QUEUE,
+            IDENTITY_CARD_VALIDATION_DEAD_LETTER_EXCHANGE,
+            IDENTITY_CARD_VALIDATION_DEAD_LETTER_ROUTING_KEY, null));
   }
 
   @Bean
   public Declarables identityCardValidationDeclarables() {
-    return new Declarables(new TopicExchange(identityCardValidationExchange),
-        QueueBuilder.durable(identityCardValidationQueue).lazy()
-            .withArgument(identityCardValidationXDeadLetterExchange,
-                identityCardValidationDeadLetterExchange)
-            .withArgument(identityCardValidationXDeadLetterRoutingKey,
-                identityCardValidationDeadLetterRoutingKey).build(),
-        new Binding(identityCardValidationQueue, DestinationType.QUEUE,
-            identityCardValidationExchange, identityCardValidationRoutingKey, null));
+    return new Declarables(new TopicExchange(IDENTITY_CARD_VALIDATION_EXCHANGE),
+        QueueBuilder.durable(IDENTITY_CARD_VALIDATION_QUEUE).lazy()
+            .withArgument(IDENTITY_CARD_VALIDATION_X_DEAD_LETTER_EXCHANGE,
+                IDENTITY_CARD_VALIDATION_DEAD_LETTER_EXCHANGE)
+            .withArgument(IDENTITY_CARD_VALIDATION_X_DEAD_LETTER_ROUTING_KEY,
+                IDENTITY_CARD_VALIDATION_DEAD_LETTER_ROUTING_KEY).build(),
+        new Binding(IDENTITY_CARD_VALIDATION_QUEUE, DestinationType.QUEUE,
+            IDENTITY_CARD_VALIDATION_EXCHANGE, IDENTITY_CARD_VALIDATION_ROUTING_KEY, null));
   }
 }
