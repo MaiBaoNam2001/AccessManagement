@@ -4,8 +4,7 @@ $(function () {
   const projectId = urlSearchParams.get('project_id');
   const buildingId = urlSearchParams.get('building_id');
   const parkingAreaId = urlSearchParams.get('parking_area_id');
-  const identityCard = window.location.pathname.split(
-      '/')[window.location.pathname.split('/').length - 1];
+
   $.fn.loadInputValue = function (endpoint, id) {
     $.ajax({
       type: 'GET',
@@ -25,7 +24,6 @@ $(function () {
   $.fn.loadInputValue(`${endpoint}/buildings/id/${buildingId}`, 'building');
   $.fn.loadInputValue(`${endpoint}/parking-areas/id/${parkingAreaId}`,
       'parkingArea');
-  $('#identityCard').val(identityCard);
 
   $.ajax({
     type: 'GET',
@@ -49,7 +47,7 @@ $(function () {
       projectId: projectId,
       buildingId: buildingId,
       parkingAreaId: parkingAreaId,
-      identityCard: identityCard,
+      identityCard: $('#identityCard').val(),
       licensePlate: $('#licensePlate').val(),
       brandName: $('#brandName').val(),
       color: $('#color').val(),

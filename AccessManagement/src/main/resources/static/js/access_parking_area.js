@@ -35,7 +35,8 @@ $(function () {
       projectId: $('#project').val(),
       buildingId: $('#building').val(),
       parkingAreaId: $('#parkingArea').val(),
-      identityCard: $('#identityCard').val()
+      identityCard: $('#identityCard').val(),
+      licensePlate: $('#licensePlate').val()
     }
 
     $.ajax({
@@ -53,12 +54,18 @@ $(function () {
             $('#errorMessage').append(`<li>${data.result[i]}</li>`)
           }
         } else {
-          window.location.href = `http://localhost:8080/parking_register/${data.result.identityCard}?project_id=${data.result.projectId}&building_id=${data.result.buildingId}&parking_area_id=${data.result.parkingAreaId}`;
+          console.log(data);
         }
       },
       error: function (jqXHR, status, error) {
         console.log(error);
       }
     });
+  });
+
+  $('#register').on('click', function () {
+    window.location.href = `http://localhost:8080/parking_register?project_id=${$(
+        '#project').val()}&building_id=${$(
+        '#building').val()}&parking_area_id=${$('#parkingArea').val()}`;
   });
 });

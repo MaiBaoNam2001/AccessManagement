@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Controller
 public class ParkingRegisterController {
 
-  @GetMapping("/parking_register/{identityCard}")
-  public String registerParking(@PathVariable(value = "identityCard") String identityCard) {
+  @GetMapping("/parking_register")
+  public String registerParking() {
     return "parking_register";
   }
 }

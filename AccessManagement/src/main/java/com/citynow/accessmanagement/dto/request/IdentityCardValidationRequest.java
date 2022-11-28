@@ -10,4 +10,5 @@ public class IdentityCardValidationRequest implements Serializable {
   private String buildingId;
   private String parkingAreaId;
   private String identityCard;
+  private String licensePlate;
 }

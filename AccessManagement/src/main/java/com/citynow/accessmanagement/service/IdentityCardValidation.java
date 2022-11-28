@@ -13,6 +13,7 @@ public interface IdentityCardValidation extends
     private String buildingId;
     private String parkingAreaId;
     private String identityCard;
+    private String licensePlate;
   }
 
   @Data
