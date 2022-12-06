@@ -1,5 +1,7 @@
 $(function () {
   const endpoint = 'http://localhost:8080/api';
+  let client = null;
+
   $.fn.loadSelectData = function (endpoint, id, eventType) {
     $.ajax({
       type: 'GET',
@@ -30,6 +32,10 @@ $(function () {
         'parkingArea', 'change')
   });
 
+  let socket = new SockJS('/ws');
+  client = Stomp.over(socket);
+  client.connect({}, onConnected, onError);
+
   $('#submit').on('click', function () {
     let identityCardValidationRequest = {
       projectId: $('#project').val(),
@@ -54,7 +60,24 @@ $(function () {
             $('#errorMessage').append(`<li>${data.result[i]}</li>`)
           }
         } else {
-          console.log(data);
+          $.ajax({
+            type: 'POST',
+            url: `${endpoint}/parking-area/check-in-out`,
+            contentType: 'application/json',
+            dataType: 'json',
+            data: JSON.stringify(data.result),
+            success: function (response) {
+              if (response.statusCode === 200) {
+                client.send('/app/send-check-in-out-parking-area-information',
+                    {}, JSON.stringify(response.result));
+              } else {
+                console.log(response.statusCode);
+              }
+            },
+            error: function (jqXHR, status, error) {
+              console.log(error);
+            }
+          })
         }
       },
       error: function (jqXHR, status, error) {
@@ -68,4 +91,13 @@ $(function () {
         '#project').val()}&building_id=${$(
         '#building').val()}&parking_area_id=${$('#parkingArea').val()}`;
   });
+
+  function onConnected() {
+    client.subscribe('/topic/public', (payload) => alert('Check card successfully'));
+  }
+
+  function onError() {
+    alert(
+        'Could not connect to WebSocket server. Please refresh this page to try again!');
+  }
 });
