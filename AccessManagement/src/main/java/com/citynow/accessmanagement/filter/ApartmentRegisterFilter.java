@@ -4,7 +4,6 @@ import com.citynow.accessmanagement.entity.ApartmentRegister;
 import java.util.Objects;
 import org.springframework.stereotype.Component;
 
-@Component
 public class ApartmentRegisterFilter {
 
   public static boolean filterByParkingAreaId(ApartmentRegister apartmentRegister,
