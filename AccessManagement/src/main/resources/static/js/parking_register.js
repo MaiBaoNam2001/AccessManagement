@@ -71,7 +71,7 @@ $(function () {
             $('#errorMessage').append(`<li>${data.result[i]}</li>`);
           }
         } else {
-          console.log(data);
+          window.location.href = 'http://localhost:8080/';
         }
       },
       error: function (jqXHR, status, error) {
